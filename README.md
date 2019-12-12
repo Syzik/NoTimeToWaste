@@ -1,0 +1,2 @@
+# NoTimeToWaste
+Automated scan subnet
