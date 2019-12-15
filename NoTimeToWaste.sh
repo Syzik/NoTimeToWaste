@@ -47,9 +47,9 @@ cat ./ALL/cmeSmbScan | grep 'unix | Windows Server | Windows 5 | Windows 6' >> .
 
 NmapServerSmb()
 {
-	path="./ALL/SMB/ServList"
-	for ip in $(cat $path); do 
-		nmap -sV --script=smb* -p 445 -Pn -iL ./ALL/SMB/ServList -oG $ip
+	for ip in $(cat input); do 
+		for ipsmb in $(cat ./$ip/SMB/ipSMB); do 
+		nmap -sV --script=smb* -p 445 -Pn $ipsmb -oG ./$ip/SMB/scan/$ipsmb
 	done
 }
 
