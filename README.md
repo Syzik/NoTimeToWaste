@@ -1,2 +1,9 @@
 # NoTimeToWaste
-Automated scan subnet
+
+## Informations 
+Automated scan subnet for RSSI 
+
+## Prerequis 
+*	masscan 
+*	cme
+*	nmap  
