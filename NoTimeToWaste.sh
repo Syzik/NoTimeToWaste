@@ -24,11 +24,12 @@
 # SSH  port tcp 22
 # TELNET port tcp 23
 # RDP port tcp 3389
+# CONSOLE JAVA port tcp 5001
 
 orange='\e[0;33m'
 neutre='\e[00m'
 rouge='\e[0;31m'
-protos='IMAP POP3 SMTP DNS LDAP KERBEROS LDAP HTTP HTTPS ILO IDRAC SQL NETBIOS SMB FTP SSH RDP TELNET'
+protos='IMAP POP3 SMTP DNS LDAP KERBEROS LDAP HTTP HTTPS ILO IDRAC SQL NETBIOS SMB FTP SSH RDP TELNET JAVACONSOLE'
 
 main()
 {
@@ -51,6 +52,7 @@ NmapServerSmb()
 		for ipsmb in $(cat ./$ip/SMB/ipSMB); do 
 		nmap -sV --script=smb* -p 445 -Pn $ipsmb -oG ./$ip/SMB/scan/$ipsmb
 	done
+done
 }
 
 nmapServFtp()
@@ -104,6 +106,7 @@ if [ "$input" ]; then
 		cat $ip/masscanoutput | grep "443/tcp" | cut -f6 -d' ' > $ip/HTTPS/ipHTTPS
 		cat $ip/masscanoutput | grep "80/tcp" | cut -f6 -d' ' > $ip/HTTP/ipHTTP
 		cat $ip/masscanoutput | grep "3389/tcp" | cut -f6 -d' ' > $ip/RDP/ipRDP
+		cat $ip/masscanoutput | grep "5001/tcp" | cut -f6 -d' ' > $ip/JAVACONSOLE/ipJAVACONSOLE
 	done
 fi
 organizeAllFolder
@@ -124,9 +127,9 @@ if [ "$input" ]; then
 	       echo -e "Scanning $ip /16 in progress"
 	       echo -e "${orange}####################################${neutre}"
 	       if [ "$rate" ]; then
-		      masscan -p 445,80,88,389,53,143,993,110,995,125,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 $ip/16 --rate=$rate | tee $ip/masscanoutput
+		      masscan -p 5001,445,80,88,389,53,143,993,110,995,125,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 $ip/16 --rate=$rate | tee $ip/masscanoutput
 	      else 
-		      masscan -p 445,80,88,389,53,143,993,110,995,125,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 $ip/16 --rate=50000 | tee $ip/masscanoutput
+		      masscan -p 5001,445,80,88,389,53,143,993,110,995,125,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 $ip/16 --rate=50000 | tee $ip/masscanoutput
 	       fi
        done
 fi
