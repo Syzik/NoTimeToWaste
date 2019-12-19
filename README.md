@@ -1,7 +1,7 @@
 # NoTimeToWaste
 
 ## Informations 
-Automated scan subnet for RSSI 
+Automated subnet scan for RSSI 
 
 ## Prerequis 
 *	Masscan 
