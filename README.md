@@ -17,7 +17,7 @@ git clone https://github.com/Syzik/NoTimeToWaste.git
 ```
 OPTIONS : 
   Mandatory argument : 
-    -i inpute file 
+    -i Input file 
   Optionnal arguments : 
     -r Masscan rate
     -h Display help
