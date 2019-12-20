@@ -1,13 +1,7 @@
 # NoTimeToWaste
 
 Automated subnet scan for RSSI 
-```
-Mandatory argument : 
-  -i inpute file 
-Optionnal arguments : 
-  -r Masscan rate
-  -h Display help
-```
+
 
 ## Requirements 
   - [Masscan](https://github.com/robertdavidgraham/masscan)
@@ -18,6 +12,15 @@ Optionnal arguments :
 
 ```bash
 git clone https://github.com/Syzik/NoTimeToWaste.git
+```
+
+```
+* OPTIONS : 
+  * Mandatory argument : 
+    -i inpute file 
+  * Optionnal arguments : 
+    -r Masscan rate
+    -h Display help
 ```
 
 ```bash
