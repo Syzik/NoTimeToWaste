@@ -14,5 +14,5 @@ git clone https://github.com/Syzik/NoTimeToWaste.git
 ```
 
 ```bash
-./NoTimeToWaste -i ipsubnet -r 50000
+./NoTimeToWaste.sh -i ipsubnet -r 50000
 ```
