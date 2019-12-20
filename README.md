@@ -2,10 +2,6 @@
 
 Automated subnet scan for RSSI 
 
-OPTIONS : 
-  * -r Masscan rate
-  * -i Input file subnet
-  * -h Display help
 
 ## Requirements 
   - [Masscan](https://github.com/robertdavidgraham/masscan)
@@ -16,6 +12,15 @@ OPTIONS :
 
 ```bash
 git clone https://github.com/Syzik/NoTimeToWaste.git
+```
+
+```
+OPTIONS : 
+  Mandatory argument : 
+    -i inpute file 
+  Optionnal arguments : 
+    -r Masscan rate
+    -h Display help
 ```
 
 ```bash
