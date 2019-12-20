@@ -1,20 +1,18 @@
 # NoTimeToWaste
 
-## Informations 
 Automated subnet scan for RSSI 
 
-## Prerequis 
-*	Masscan 
-*	CrackMapExec
-*	Nmap  
+## Requirements 
+  - [Masscan](https://github.com/robertdavidgraham/masscan)
+  - [Nmap](https://github.com/nmap/nmap)
+  - [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec)
 
-### install CracrMapExec 
-*   https://github.com/byt3bl33d3r/CrackMapExec
+## Usage
 
-### install Masscan
-*   https://github.com/robertdavidgraham/masscan
+```bash
+git clone https://github.com/Syzik/NoTimeToWaste.git
+```
 
-### install Nmap
-*   https://github.com/nmap/nmap
-
-
+```bash
+./NoTimeToWaste -i ipsubnet -r 50000
+```
