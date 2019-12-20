@@ -2,6 +2,11 @@
 
 Automated subnet scan for RSSI 
 
+OPTIONS : 
+  * -r Masscan rate
+  * -i Input file subnet
+  * -h Display help
+
 ## Requirements 
   - [Masscan](https://github.com/robertdavidgraham/masscan)
   - [Nmap](https://github.com/nmap/nmap)
