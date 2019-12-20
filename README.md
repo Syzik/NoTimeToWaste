@@ -15,10 +15,10 @@ git clone https://github.com/Syzik/NoTimeToWaste.git
 ```
 
 ```
-* OPTIONS : 
-  * Mandatory argument : 
+OPTIONS : 
+  Mandatory argument : 
     -i inpute file 
-  * Optionnal arguments : 
+  Optionnal arguments : 
     -r Masscan rate
     -h Display help
 ```
