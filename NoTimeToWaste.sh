@@ -26,6 +26,15 @@
 # RDP port tcp 3389
 # CONSOLE JAVA port tcp 5001
 
+# TODO : 
+#  ISCSI port 860 / 3260
+#  IPMI 
+#  IIM
+#  mongodb 
+#  postgresql
+#  vnc
+#  x11 
+
 orange='\e[0;33m'
 neutre='\e[00m'
 rouge='\e[0;31m'
