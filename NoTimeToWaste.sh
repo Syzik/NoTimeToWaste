@@ -153,6 +153,7 @@ echo -e "${rouge}#########################################################${neut
 while getopts "h:i:rate:st" option; 
 do
 	case "${option}" in
+        -interface)${OPTARG};;
 		r) rate=${OPTARG};;
 		i) input=${OPTARG};;
 		h) usage; exit;;
