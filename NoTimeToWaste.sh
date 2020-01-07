@@ -150,7 +150,7 @@ echo -e "${orange}# Example: ./NoTimeToWaste.sh -i inputPathSubnetFile ${neutre}
 echo -e "${rouge}#########################################################${neutre}"
 }
 
-while getopts "h:i:rate:st" option; 
+while getopts "h:i:r:st" option; 
 do
 	case "${option}" in
         -interface)${OPTARG};;
