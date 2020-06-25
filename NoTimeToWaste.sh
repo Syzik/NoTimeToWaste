@@ -26,6 +26,15 @@
 # RDP port tcp 3389
 # CONSOLE JAVA port tcp 5001
 
+# TODO : 
+#  ISCSI port 860 / 3260
+#  IPMI 
+#  IIM
+#  mongodb 
+#  postgresql
+#  vnc
+#  x11 
+
 orange='\e[0;33m'
 neutre='\e[00m'
 rouge='\e[0;31m'
@@ -38,12 +47,18 @@ main()
 
 organiseClientSmb()
 {
-cat ./ALL/cmeSmbScan | grep "Windows XP | Windows 7 | Windows 10 | Linux" >> ./ALL/SMB/ClientList
+cat ./ALL/cmeSmbScan | grep "Windows XP \| Windows 7 \| Windows 10 \| Linux" --binary-files=text >> ./ALL/SMB/ClientList
 }
 
 organiseServerSmb()
 {
-cat ./ALL/cmeSmbScan | grep 'unix | Windows Server | Windows 5 | Windows 6' >> ./ALL/SMB/ServList
+cat ./ALL/cmeSmbScan | grep 'Unix \| Windows Server \| Windows 5 \| Windows 6' --binary-files=text >> ./ALL/SMB/ServList
+cat ./ALL/SMB/ServList | grep "2008" --binary-files=text >> ./ALL/SMB/Serv2008
+cat ./ALL/SMB/Serv2008 | cut -d' ' -f10 >> ./ALL/SMB/ipServ2008
+cat ./ALL/SMB/ServList | grep "2012" --binary-files=text >> ./ALL/SMB/Serv2012
+cat ./ALL/SMB/Serv2012 | cut -d' ' -f10 >> ./ALL/SMB/ipServ2012
+cat ./ALL/SMB/ServList | grep "2016" --binary-files=text >> ./ALL/SMB/Serv2016
+cat ./ALL/SMB/Serv2016 | cut -d' ' -f10 >> ./ALL/SMB/ipServ2016
 }
 
 NmapServerSmb()
@@ -129,7 +144,8 @@ if [ "$input" ]; then
 	       if [ "$rate" ]; then
 		      masscan -p 5001,445,80,88,389,53,143,993,110,995,125,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389  172.19.91.1-31 --rate=$rate | tee $ip/masscanoutput
 	      else 
-		      masscan -p 5001,445,80,88,389,53,143,993,110,995,125,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 172.19.91.1-31 --rate=50000 | tee $ip/masscanoutput
+		      #masscan -p 5001,445,80,88,389,53,143,993,110,995,125,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 172.19.91.1-31 --rate=50000 | tee $ip/masscanoutput
+		      masscan -p 5001,445,80,88,389,53,143,993,110,995,125,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 $ip/16 | tee $ip/masscanoutput
 	       fi
        done
 fi
@@ -150,9 +166,10 @@ echo -e "${orange}# Example: ./NoTimeToWaste.sh -i inputPathSubnetFile ${neutre}
 echo -e "${rouge}#########################################################${neutre}"
 }
 
-while getopts "h:i:rate:st" option; 
+while getopts "h:i:r:st" option; 
 do
 	case "${option}" in
+        -interface)${OPTARG};;
 		r) rate=${OPTARG};;
 		i) input=${OPTARG};;
 		h) usage; exit;;
