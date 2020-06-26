@@ -47,20 +47,22 @@ main()
 
 organiseClientSmb()
 {
-cat ./ALL/cmeSmbScan | grep "Windows XP \| Windows 7 \| Windows 10 \| Linux" --binary-files=text >> ./ALL/SMB/ClientList
+mkdir ./ALL/SMB/Client
+cat ./ALL/cmeSmbScan | grep "Windows XP \| Windows 7 \| Windows 10 \| Linux" --binary-files=text >> ./ALL/SMB/Client/ClientList
 }
 
 organiseServerSmb()
 {
-cat ./ALL/cmeSmbScan | grep 'Unix \| Windows Server \| Windows 5 \| Windows 6' --binary-files=text >> ./ALL/SMB/ServList
-cat ./ALL/SMB/ServList | grep "2003" --binary-files=text >> ./ALL/SMB/Serv2003
-cat ./ALL/SMB/Serv2003 | cut -d' ' -f10 >> ./ALL/SMB/ipServ2003
-cat ./ALL/SMB/ServList | grep "2008" --binary-files=text >> ./ALL/SMB/Serv2008
-cat ./ALL/SMB/Serv2008 | cut -d' ' -f10 >> ./ALL/SMB/ipServ2008
-cat ./ALL/SMB/ServList | grep "2012" --binary-files=text >> ./ALL/SMB/Serv2012
-cat ./ALL/SMB/Serv2012 | cut -d' ' -f10 >> ./ALL/SMB/ipServ2012
-cat ./ALL/SMB/ServList | grep "2016" --binary-files=text >> ./ALL/SMB/Serv2016
-cat ./ALL/SMB/Serv2016 | cut -d' ' -f10 >> ./ALL/SMB/ipServ2016
+mkdir ./ALL/SMB/Serv
+cat ./ALL/cmeSmbScan | grep 'Unix \| Windows Server \| Windows 5 \| Windows 6' --binary-files=text >> ./ALL/SMB/Serv/ServList
+cat ./ALL/SMB/Serv/ServList | grep "2003" --binary-files=text >> ./ALL/SMB/Serv/Serv2003
+cat ./ALL/SMB/Serv/Serv2003 | cut -d' ' -f10 >> ./ALL/SMB/Serv/ipServ2003
+cat ./ALL/SMB/Serv/ServList | grep "2008" --binary-files=text >> ./ALL/SMB/Serv/Serv2008
+cat ./ALL/SMB/Serv/Serv2008 | cut -d' ' -f10 >> ./ALL/SMB/Serv/ipServ2008
+cat ./ALL/SMB/Serv/ServList | grep "2012" --binary-files=text >> ./ALL/SMB/Serv/Serv2012
+cat ./ALL/SMB/Serv/Serv2012 | cut -d' ' -f10 >> ./ALL/SMB/Serv/ipServ2012
+cat ./ALL/SMB/Serv/ServList | grep "2016" --binary-files=text >> ./ALL/SMB/Serv/Serv2016
+cat ./ALL/SMB/Serv/Serv2016 | cut -d' ' -f10 >> ./ALL/SMB/Serv/ipServ2016
 }
 
 NmapServerSmb()
