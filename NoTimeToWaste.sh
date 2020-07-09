@@ -86,6 +86,8 @@ nmapServFtp()
 CmeSmbAll()
 {
 cme smb ./ALL/SMB/ipSMB | tee ./ALL/cmeSmbScan
+organiseServerSmb
+organiseClientSmb
 }
 
 organizeAllFolder()
@@ -94,8 +96,6 @@ for proto in $protos
 do
 	cat ./*/$proto/ip$proto | sort -u > ./ALL/$proto/ip$proto
 done
-organiseServerSmb
-organiseClientSmb
 }
 
 organizeSubnetFolder()
@@ -108,11 +108,11 @@ if [ "$input" ]; then
 		cat $ip/masscanoutput | grep "23/tcp" | cut -f6 -d' ' > $ip/TELNET/ipTELNET
 		cat $ip/masscanoutput | grep "445/tcp" | cut -f6 -d' ' > $ip/SMB/ipSMB
 		cat $ip/masscanoutput | grep "88/tcp" | cut -f6 -d' ' > $ip/KERBEROS/ipKERBEROS
-		cat $ip/masscanoutput | grep "389/tcp" | cut -f6 -d' ' > $ip/LDAP/ipLDAP
+		cat $ip/masscanoutput | grep " 389/tcp" | cut -f6 -d' ' > $ip/LDAP/ipLDAP
 		cat $ip/masscanoutput | grep "53/tcp" | cut -f6 -d' ' > $ip/DNS/ipDNS
 		cat $ip/masscanoutput | grep "143/tcp" | cut -f6 -d' ' >> $ip/IMAP/ipIMAP
 		cat $ip/masscanoutput | grep "993/tcp" | cut -f6 -d' ' >> $ip/IMAP/ipIMAP
-		cat $ip/masscanoutput | grep "125/tcp" | cut -f6 -d' ' >> $ip/IMAP/ipSMTP
+		cat $ip/masscanoutput | grep "25/tcp" | cut -f6 -d' ' >> $ip/IMAP/ipSMTP
 		cat $ip/masscanoutput | grep "465/tcp" | cut -f6 -d' ' >> $ip/IMAP/ipSMTP
 		cat $ip/masscanoutput | grep "110/tcp" | cut -f6 -d' ' >> $ip/IMAP/ipPOP3
 		cat $ip/masscanoutput | grep "995/tcp" | cut -f6 -d' ' >> $ip/IMAP/ipPOP3
@@ -146,10 +146,10 @@ if [ "$input" ]; then
 	       echo -e "Scanning $ip /16 in progress"
 	       echo -e "${orange}####################################${neutre}"
 	       if [ "$rate" ]; then
-		      masscan -p 5001,445,80,88,389,53,143,993,110,995,125,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389  172.19.91.1-31 --rate=$rate | tee $ip/masscanoutput
+		      masscan -p 5001,445,80,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 $ip/16 --rate=$rate | tee $ip/masscanoutput
 	      else 
 		      #masscan -p 5001,445,80,88,389,53,143,993,110,995,125,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 172.19.91.1-31 --rate=50000 | tee $ip/masscanoutput
-		      masscan -p 5001,445,80,88,389,53,143,993,110,995,125,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 $ip/16 | tee $ip/masscanoutput
+		      masscan -p 5001,445,80,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 $ip/16 | tee $ip/masscanoutput
 	       fi
        done
 fi
