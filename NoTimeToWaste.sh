@@ -25,6 +25,7 @@
 # TELNET port tcp 23
 # RDP port tcp 3389
 # CONSOLE JAVA port tcp 5001
+#  x11 6000
 
 # TODO : 
 #  WinRM  5985, 5986
@@ -34,12 +35,12 @@
 #  mongodb 
 #  postgresql
 #  vnc
-#  x11 
+
 
 orange='\e[0;33m'
 neutre='\e[00m'
 rouge='\e[0;31m'
-protos='IMAP POP3 SMTP DNS LDAP KERBEROS LDAP HTTP HTTPS ILO IDRAC SQL NETBIOS SMB FTP SSH RDP TELNET JAVACONSOLE'
+protos='IMAP POP3 SMTP DNS LDAP KERBEROS LDAP HTTP HTTPS ILO IDRAC SQL NETBIOS SMB FTP SSH RDP TELNET JAVACONSOLE X11'
 
 main()
 {
@@ -127,6 +128,7 @@ if [[ "$input" ]]; then
 		cat ${ip}/masscanoutput | grep "80/tcp" | cut -f6 -d' ' > ${ip}/HTTP/ipHTTP
 		cat ${ip}/masscanoutput | grep "3389/tcp" | cut -f6 -d' ' > ${ip}/RDP/ipRDP
 		cat ${ip}/masscanoutput | grep "5001/tcp" | cut -f6 -d' ' > ${ip}/JAVACONSOLE/ipJAVACONSOLE
+		cat ${ip}/masscanoutput | grep "6000/tcp" | cut -f6 -d' ' > ${ip}/X11/ipX11
 	done
 fi
 organizeAllFolder
@@ -135,8 +137,8 @@ organizeAllFolder
 checkIfHostIsUp()
 {
 	range=$1
-	echo -e "range hehe "${range}
-	nmap -PEPM -sP -n ${range} > ${range}/ipup.txt
+	netdiscover -r 192.168.0.0/16 -dPNS | egrep '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' | cut -d' ' -f 2 > ${range}/ipup.txt
+	#nmap -PEPM -sP -n ${range}/16 :while> ${range}/ipup.txt
 }
 
 createArchi()
@@ -150,19 +152,19 @@ if [[ "$input" ]]; then
 		      mkdir -p ${ip}/${proto}/scan 2>/dev/null
 		      touch ${ip}/${proto}/ip${proto}
 	       	done
-	       	echo -e "${orange}####################################${neutre}"
-	       	echo -e "Scanning ${ip} /16 in progress"
-		echo -e "${orange}####################################${neutre}"
-		checkIfHostIsUp $ip 
-		for ipup in $(cat ./${ip}/ipup.txt)
-		do
-			if [[ "$rate" ]]; then
-		 		masscan -p 5001,445,80,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 ${ipup} --rate=$rate >> ${ip}/masscanoutput
+	    	echo -e "${orange}####################################${neutre}"
+	    	echo -e "Scanning ${ip} /16 in progress"
+			echo -e "${orange}####################################${neutre}"
+			checkIfHostIsUp $ip 
+			for ipup in $(cat ./${ip}/ipup.txt)
+			do
+				if [[ "$rate" ]]; then
+		 			masscan -p 5001,445,80,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389,6000 ${ipup} --rate=$rate >> ${ip}/masscanoutput
 	      		else 
 		      		#masscan -p 5001,445,80,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 172.19.91.1-31 --rate=50000 | tee $ip/masscanoutput
-		      		masscan -p 5001,445,80,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 ${ipup} >> ${ip}/masscanoutput
+		    		masscan -p 5001,445,80,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389,6000 ${ipup} >> ${ip}/masscanoutput
 	       		fi
-		done	
+			done	
        done
 fi
 organizeSubnetFolder
@@ -176,9 +178,9 @@ echo -e "${rouge}#########################################################${neut
 echo -e "${orange}# @SyzikSecu ${neutre}"
 echo -e "${orange}# Example: ./NoTimeToWaste.sh -i inputPathSubnetFile ${neutre}\n"
 		echo "OPTIONS:"
-		echo "-r	masscan rate" 
-		echo "-i 	Subnet file"
-		echo "-h	Displays this help text"
+		echo -e "\t-r masscan rate" 
+		echo -e "\t-i Subnet file"
+		echo -e "\t-h Displays this help text"
 echo -e "${rouge}#########################################################${neutre}"
 }
 
