@@ -10,7 +10,7 @@
 # HTTP port tcp 80 
 # HTTPS port tcp 443
 # LDAP port tcp 389
-# iKERBEROS port tcp 88 
+# KERBEROS port tcp 88 
 # DNS port tcp 53 
 # NETBIOS port tcp 139
 # MAIL 
@@ -69,17 +69,17 @@ cat ./ALL/SMB/Serv/Serv2016 | cut -d' ' -f10 >> ./ALL/SMB/Serv/ipServ2016
 NmapServerSmb()
 {
 	for ip in $(cat input); do 
-		for ipsmb in $(cat ./$ip/SMB/ipSMB); do 
-		nmap -sV --script=smb* -p 445 -Pn $ipsmb -oG ./$ip/SMB/scan/$ipsmb
+		for ipsmb in $(cat ./${ip}/SMB/ipSMB); do 
+			nmap -sV --script=smb* -p 445 -Pn ${ipsmb} -oG ./${ip}/SMB/scan/${ipsmb}
 	done
 done
 }
 
 nmapServFtp()
 {
-	for ip in $(cat $input); do 
-		for ipftp in $(cat ./$ip/FTP/ipFTP); do 
-			nmap -sV -sC --script=ftp* -p 21 -Pn $ipftp -oG ./$ip/FTP/scan/$ipftp 
+	for ip in $(cat ${input}); do 
+		for ipftp in $(cat ./${ip}/FTP/ipFTP); do 
+			nmap -sV -sC --script=ftp* -p 21 -Pn ${ipftp} -oG ./${ip}/FTP/scan/${ipftp} 
 		done
 	done
 }
@@ -93,65 +93,76 @@ organiseClientSmb
 
 organizeAllFolder()
 {
-for proto in $protos
+for proto in ${protos}
 do
-	cat ./*/$proto/ip$proto | sort -u > ./ALL/$proto/ip$proto
+	cat ./*/${proto}/ip${proto} | sort -u > ./ALL/${proto}/ip${proto}
 done
 }
 
 organizeSubnetFolder()
 {
-if [ "$input" ]; then 
-	for ip in $(cat $input)
+if [[ "$input" ]]; then 
+	for ip in $(cat ${input})
 	do
-		cat $ip/masscanoutput | grep "21/tcp" | cut -f6 -d' ' > $ip/FTP/ipFTP
-		cat $ip/masscanoutput | grep "22/tcp" | cut -f6 -d' ' > $ip/SSH/ipSSH
-		cat $ip/masscanoutput | grep "23/tcp" | cut -f6 -d' ' > $ip/TELNET/ipTELNET
-		cat $ip/masscanoutput | grep "445/tcp" | cut -f6 -d' ' > $ip/SMB/ipSMB
-		cat $ip/masscanoutput | grep "88/tcp" | cut -f6 -d' ' > $ip/KERBEROS/ipKERBEROS
-		cat $ip/masscanoutput | grep " 389/tcp" | cut -f6 -d' ' > $ip/LDAP/ipLDAP
-		cat $ip/masscanoutput | grep "53/tcp" | cut -f6 -d' ' > $ip/DNS/ipDNS
-		cat $ip/masscanoutput | grep "143/tcp" | cut -f6 -d' ' >> $ip/IMAP/ipIMAP
-		cat $ip/masscanoutput | grep "993/tcp" | cut -f6 -d' ' >> $ip/IMAP/ipIMAP
-		cat $ip/masscanoutput | grep "25/tcp" | cut -f6 -d' ' >> $ip/IMAP/ipSMTP
-		cat $ip/masscanoutput | grep "465/tcp" | cut -f6 -d' ' >> $ip/IMAP/ipSMTP
-		cat $ip/masscanoutput | grep "110/tcp" | cut -f6 -d' ' >> $ip/IMAP/ipPOP3
-		cat $ip/masscanoutput | grep "995/tcp" | cut -f6 -d' ' >> $ip/IMAP/ipPOP3
-		cat $ip/masscanoutput | grep "17990/tcp" | cut -f6 -d' ' > $ip/ILO/ipILO
-		cat $ip/masscanoutput | grep "5900/tcp" | cut -f6 -d' ' > $ip/IDRAC/ipIDRAC
-		cat $ip/masscanoutput | grep "1433/tcp" | cut -f6 -d' ' > $ip/SQL/ipSQL
-		cat $ip/masscanoutput | grep "3306/tcp" | cut -f6 -d' ' > $ip/SQL/ipMYSQL
-		cat $ip/masscanoutput | grep "1521/tcp" | cut -f6 -d' ' > $ip/SQL/ipORACLE
-		cat $ip/masscanoutput | grep "139/tcp" | cut -f6 -d' ' > $ip/NETBIOS/ipNETBIOS
-		cat $ip/masscanoutput | grep "443/tcp" | cut -f6 -d' ' > $ip/HTTPS/ipHTTPS
-		cat $ip/masscanoutput | grep "80/tcp" | cut -f6 -d' ' > $ip/HTTP/ipHTTP
-		cat $ip/masscanoutput | grep "3389/tcp" | cut -f6 -d' ' > $ip/RDP/ipRDP
-		cat $ip/masscanoutput | grep "5001/tcp" | cut -f6 -d' ' > $ip/JAVACONSOLE/ipJAVACONSOLE
+		cat ${ip}/masscanoutput | grep "21/tcp" | cut -f6 -d' ' > ${ip}/FTP/ipFTP
+		cat ${ip}/masscanoutput | grep "22/tcp" | cut -f6 -d' ' > ${ip}/SSH/ipSSH
+		cat ${ip}/masscanoutput | grep "23/tcp" | cut -f6 -d' ' > ${ip}/TELNET/ipTELNET
+		cat ${ip}/masscanoutput | grep "445/tcp" | cut -f6 -d' ' > ${ip}/SMB/ipSMB
+		cat ${ip}/masscanoutput | grep "88/tcp" | cut -f6 -d' ' > ${ip}/KERBEROS/ipKERBEROS
+		cat ${ip}/masscanoutput | grep " 389/tcp" | cut -f6 -d' ' > ${ip}/LDAP/ipLDAP
+		cat ${ip}/masscanoutput | grep "53/tcp" | cut -f6 -d' ' > ${ip}/DNS/ipDNS
+		cat ${ip}/masscanoutput | grep "143/tcp" | cut -f6 -d' ' >> ${ip}/IMAP/ipIMAP
+		cat ${ip}/masscanoutput | grep "993/tcp" | cut -f6 -d' ' >> ${ip}/IMAP/ipIMAP
+		cat ${ip}/masscanoutput | grep "25/tcp" | cut -f6 -d' ' >> ${ip}/IMAP/ipSMTP
+		cat ${ip}/masscanoutput | grep "465/tcp" | cut -f6 -d' ' >> ${ip}/IMAP/ipSMTP
+		cat ${ip}/masscanoutput | grep "110/tcp" | cut -f6 -d' ' >> ${ip}/IMAP/ipPOP3
+		cat ${ip}/masscanoutput | grep "995/tcp" | cut -f6 -d' ' >> ${ip}/IMAP/ipPOP3
+		cat ${ip}/masscanoutput | grep "17990/tcp" | cut -f6 -d' ' > ${ip}/ILO/ipILO
+		cat ${ip}/masscanoutput | grep "5900/tcp" | cut -f6 -d' ' > ${ip}/IDRAC/ipIDRAC
+		cat ${ip}/masscanoutput | grep "1433/tcp" | cut -f6 -d' ' > ${ip}/SQL/ipSQL
+		cat ${ip}/masscanoutput | grep "3306/tcp" | cut -f6 -d' ' > ${ip}/SQL/ipMYSQL
+		cat ${ip}/masscanoutput | grep "1521/tcp" | cut -f6 -d' ' > ${ip}/SQL/ipORACLE
+		cat ${ip}/masscanoutput | grep "139/tcp" | cut -f6 -d' ' > ${ip}/NETBIOS/ipNETBIOS
+		cat ${ip}/masscanoutput | grep "443/tcp" | cut -f6 -d' ' > ${ip}/HTTPS/ipHTTPS
+		cat ${ip}/masscanoutput | grep "80/tcp" | cut -f6 -d' ' > ${ip}/HTTP/ipHTTP
+		cat ${ip}/masscanoutput | grep "3389/tcp" | cut -f6 -d' ' > ${ip}/RDP/ipRDP
+		cat ${ip}/masscanoutput | grep "5001/tcp" | cut -f6 -d' ' > ${ip}/JAVACONSOLE/ipJAVACONSOLE
 	done
 fi
 organizeAllFolder
 }
 
+checkIfHostIsUp()
+{
+	range=$1
+	echo -e "range hehe "${range}
+	nmap -PEPM -sP -n ${range} > ${range}/ipup.txt
+}
+
 createArchi()
 {
-if [ "$input" ]; then
-       for ip in $(cat $input)
+if [[ "$input" ]]; then
+       for ip in $(cat ${input})
        do 
-	       for proto in $protos
-	       do
-		       mkdir -p ALL/$proto 2>/dev/null
-		       mkdir -p $ip/$proto/scan 2>/dev/null
-		       touch $ip/$proto/ip$proto
-	       done
-	       echo -e "${orange}####################################${neutre}"
-	       echo -e "Scanning $ip /16 in progress"
-	       echo -e "${orange}####################################${neutre}"
-	       if [ "$rate" ]; then
-		      masscan -p 5001,445,80,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 $ip/16 --rate=$rate | tee $ip/masscanoutput
-	      else 
-		      #masscan -p 5001,445,80,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 172.19.91.1-31 --rate=50000 | tee $ip/masscanoutput
-		      masscan -p 5001,445,80,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 $ip/16 | tee $ip/masscanoutput
-	       fi
+	       	for proto in $protos
+	       	do
+		      mkdir -p ALL/${proto} 2>/dev/null
+		      mkdir -p ${ip}/${proto}/scan 2>/dev/null
+		      touch ${ip}/${proto}/ip${proto}
+	       	done
+	       	echo -e "${orange}####################################${neutre}"
+	       	echo -e "Scanning ${ip} /16 in progress"
+		echo -e "${orange}####################################${neutre}"
+		checkIfHostIsUp $ip 
+		for ipup in $(cat ./${ip}/ipup.txt)
+		do
+			if [[ "$rate" ]]; then
+		 		masscan -p 5001,445,80,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 ${ipup} --rate=$rate >> ${ip}/masscanoutput
+	      		else 
+		      		#masscan -p 5001,445,80,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 172.19.91.1-31 --rate=50000 | tee $ip/masscanoutput
+		      		masscan -p 5001,445,80,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 ${ipup} >> ${ip}/masscanoutput
+	       		fi
+		done	
        done
 fi
 organizeSubnetFolder
@@ -181,5 +192,10 @@ do
 		*) usage; exit;;
 	esac
 done
+
+if [[ "$EUID" -ne 0 ]]
+  then echo "Please run as root"
+  exit
+fi
 
 main
