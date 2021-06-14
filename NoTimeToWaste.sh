@@ -137,7 +137,7 @@ organizeAllFolder
 checkIfHostIsUp()
 {
 	range=$1
-	netdiscover -r 192.168.0.0/16 -dPNS | egrep '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' | cut -d' ' -f 2 > ${range}/ipup.txt
+	netdiscover -r 192.168.0.0/16 -dPNS | egrep -o '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' > ${range}/ipup.txt
 	#nmap -PEPM -sP -n ${range}/16 :while> ${range}/ipup.txt
 }
 
