@@ -27,6 +27,7 @@
 # CONSOLE JAVA port tcp 5001
 
 # TODO : 
+#  WinRM  5985, 5986
 #  ISCSI port 860 / 3260
 #  IPMI 
 #  IIM
