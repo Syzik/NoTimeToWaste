@@ -8,6 +8,8 @@
 	## ORACLE port tcp 1521
 # SMB port tcp 445 
 # HTTP port tcp 80 
+# HTTP port tcp 8080
+# HTTP port tcp 8181 
 # HTTPS port tcp 443
 # LDAP port tcp 389
 # iKERBEROS port tcp 88 
@@ -128,6 +130,8 @@ if [ "$input" ]; then
 		cat $ip/masscanoutput |grep "139/tcp" |cut -f6 -d' ' > $ip/NETBIOS/ipNETBIOS
 		cat $ip/masscanoutput |grep "443/tcp" |cut -f6 -d' ' > $ip/HTTPS/ipHTTPS
 		cat $ip/masscanoutput |grep "80/tcp" |cut -f6 -d' ' > $ip/HTTP/ipHTTP
+		cat $ip/masscanoutput |grep "8080/tcp" |cut -f6 -d' ' > $ip/HTTP/ipHTTP8080
+		cat $ip/masscanoutput |grep "8181/tcp" |cut -f6 -d' ' > $ip/HTTP/ipHTTP8181
 		cat $ip/masscanoutput |grep "3389/tcp" |cut -f6 -d' ' > $ip/RDP/ipRDP
 		cat $ip/masscanoutput |grep "5001/tcp" |cut -f6 -d' ' > $ip/JAVACONSOLE/ipJAVACONSOLE
 	done
@@ -150,10 +154,10 @@ if [ "$input" ]; then
 	       echo -e "Scanning $ip /16 in progress"
 	       echo -e "${orange}####################################${neutre}"
 	       if [ "$rate" ]; then
-		      masscan -p 5001,445,80,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 $ip/16 --rate=$rate |tee $ip/masscanoutput
+		      masscan -p 5001,445,80,8080,8181,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 $ip/16 --rate=$rate |tee $ip/masscanoutput
 	      else 
 		      #masscan -p 5001,445,80,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 172.19.91.1-31 --rate=50000 | tee $ip/masscanoutput
-		      masscan -p 5001,445,80,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 $ip/16 |tee $ip/masscanoutput
+		      masscan -p 5001,445,80,8080,8181,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 $ip/16 |tee $ip/masscanoutput
 	       fi
        done
 fi
