@@ -24,5 +24,5 @@ OPTIONS :
 ```
 
 ```bash
-./NoTimeToWaste.sh -i ipsubnet -r 50000
+sudo ./NoTimeToWaste.sh -i ipsubnet -r 50000
 ```

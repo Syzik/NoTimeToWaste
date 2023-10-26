@@ -27,6 +27,7 @@
 # TELNET port tcp 23
 # RDP port tcp 3389
 # CONSOLE JAVA port tcp 5001
+# DOCKERREGISTRY port tcp 5000
 
 # TODO : 
 #  WinRM  5985, 5986
@@ -44,7 +45,7 @@
 orange='\e[0;33m'
 neutre='\e[00m'
 rouge='\e[0;31m'
-protos='IMAP POP3 SMTP DNS LDAP KERBEROS LDAP HTTP HTTPS ILO IDRAC SQL NETBIOS SMB FTP SSH RDP TELNET JAVACONSOLE'
+protos='IMAP POP3 SMTP DNS LDAP KERBEROS LDAP HTTP HTTPS ILO IDRAC SQL NETBIOS SMB FTP SSH RDP TELNET JAVACONSOLE DOCKERREGISTRY'
 
 main()
 {
@@ -73,7 +74,7 @@ cat ./ALL/SMB/Serv/Serv2016 |cut -d' ' -f10 >> ./ALL/SMB/Serv/ipServ2016
 
 NmapServerSmb()
 {
-	for ip in $(cat input); do 
+	for ip in $(cat $input | cut -d'/' -f 1); do 
 		for ipsmb in $(cat ./$ip/SMB/ipSMB); do 
 		nmap -sV --script=smb* -p 445 -Pn $ipsmb -oG ./$ip/SMB/scan/$ipsmb
 	done
@@ -82,7 +83,7 @@ done
 
 nmapServFtp()
 {
-	for ip in $(cat $input); do 
+	for ip in $(cat $input | cut -d'/' -f 1); do 
 		for ipftp in $(cat ./$ip/FTP/ipFTP); do 
 			nmap -sV -sC --script=ftp* -p 21 -Pn $ipftp -oG ./$ip/FTP/scan/$ipftp 
 		done
@@ -107,7 +108,7 @@ done
 organizeSubnetFolder()
 {
 if [ "$input" ]; then 
-	for ip in $(cat $input)
+	for ip in $(cat $input | cut -d'/' -f 1)
 	do
 		cat $ip/masscanoutput |grep "21/tcp" |cut -f6 -d' ' > $ip/FTP/ipFTP
 		cat $ip/masscanoutput |grep "22/tcp" |cut -f6 -d' ' > $ip/SSH/ipSSH
@@ -134,6 +135,7 @@ if [ "$input" ]; then
 		cat $ip/masscanoutput |grep "8181/tcp" |cut -f6 -d' ' > $ip/HTTP/ipHTTP8181
 		cat $ip/masscanoutput |grep "3389/tcp" |cut -f6 -d' ' > $ip/RDP/ipRDP
 		cat $ip/masscanoutput |grep "5001/tcp" |cut -f6 -d' ' > $ip/JAVACONSOLE/ipJAVACONSOLE
+		cat $ip/masscanoutput |grep "5000/tcp" |cut -f6 -d' ' > $ip/DOCKERREGISTRY/ipDOCKER
 	done
 fi
 organizeAllFolder
@@ -142,24 +144,28 @@ organizeAllFolder
 createArchi()
 {
 if [ "$input" ]; then
-       for ip in $(cat $input)
-       do 
-	       for proto in $protos
-	       do
+	echo "$input"
+	exec 3< "$input"
+	while IFS= read -r line <&3; do
+		range=$(echo "$line")
+  		ip=$(echo "$line" | cut -d'/' -f 1)
+		for proto in $protos
+		do
 		       mkdir -p ALL/$proto 2>/dev/null
 		       mkdir -p $ip/$proto/scan 2>/dev/null
 		       touch $ip/$proto/ip$proto
 	       done
 	       echo -e "${orange}####################################${neutre}"
-	       echo -e "Scanning $ip /16 in progress"
+	       echo -e "Scanning $range in progress"
 	       echo -e "${orange}####################################${neutre}"
 	       if [ "$rate" ]; then
-		      masscan -p 5001,445,80,8080,8181,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 $ip/16 --rate=$rate |tee $ip/masscanoutput
+		      masscan --interface tun0 -p 5000,5001,445,80,8080,8181,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 $range --rate=$rate |tee $ip/masscanoutput
 	      else 
 		      #masscan -p 5001,445,80,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 172.19.91.1-31 --rate=50000 | tee $ip/masscanoutput
-		      masscan -p 5001,445,80,8080,8181,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 $ip/16 |tee $ip/masscanoutput
+		      masscan --interface tun0 -p 5000,5001,445,80,8080,8181,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 $range |tee $ip/masscanoutput
 	       fi
        done
+       exec 3<&-
 fi
 organizeSubnetFolder
 }
