@@ -1,10 +1,13 @@
 #!/bin/bash
 
+
 # ILO port tcp 17990
 # IDRAC port tcp 5900
 # BDD
 	## SQL port tcp 1433
 	## MYSQL port tcp 3306
+	## MONGODB port tcp 27016
+	## POSTGRESQL port tcp 5431
 	## ORACLE port tcp 1521
 # SMB port tcp 445 
 # HTTP port tcp 80 
@@ -17,7 +20,7 @@
 # NETBIOS port tcp 139
 # MAIL 
 	## IMAP port tcp 143
-       	## IMAP SSL port tcp 993
+    ## IMAP SSL port tcp 993
 	## SMTP port tcp 25
 	## SMTP SSL port tcp 465
 	## POP3 port tcp 110
@@ -28,24 +31,21 @@
 # RDP port tcp 3389
 # CONSOLE JAVA port tcp 5001
 # DOCKERREGISTRY port tcp 5000
+# WinRM  port tcp 5985, 5986
+# ISCSI port tcp 860 / 3260
+# IPMI port tcp 623
+# vnc port tcp 5900
+# x11 port tcp 6000
+# vcenter port tcp 5480  
+# esxi port tcp	902 903
 
 # TODO : 
-#  WinRM  5985, 5986
-#  ISCSI port 860 / 3260
-#  IPMI 
 #  IIM
-#  mongodb 
-#  postgresql
-#  vnc
-#  x11 
-
-# vcenter 5480  
-# esxi 	902 903
 
 orange='\e[0;33m'
 neutre='\e[00m'
 rouge='\e[0;31m'
-protos='IMAP POP3 SMTP DNS LDAP KERBEROS LDAP HTTP HTTPS ILO IDRAC SQL NETBIOS SMB FTP SSH RDP TELNET JAVACONSOLE DOCKERREGISTRY'
+protos='IMAP POP3 SMTP DNS LDAP KERBEROS LDAP HTTP HTTPS ILO IDRAC SQL NETBIOS SMB FTP SSH RDP TELNET JAVACONSOLE DOCKERREGISTRY WINRM ISCSI IPMI VNC X11 VCENTER ESXI'
 
 main()
 {
@@ -128,6 +128,8 @@ if [ "$input" ]; then
 		cat $ip/masscanoutput |grep "1433/tcp" |cut -f6 -d' ' > $ip/SQL/ipSQL
 		cat $ip/masscanoutput |grep "3306/tcp" |cut -f6 -d' ' > $ip/SQL/ipMYSQL
 		cat $ip/masscanoutput |grep "1521/tcp" |cut -f6 -d' ' > $ip/SQL/ipORACLE
+		cat $ip/masscanoutput |grep "27016/tcp" |cut -f6 -d' ' > $ip/SQL/ipMONGODB
+		cat $ip/masscanoutput |grep "5431/tcp" |cut -f6 -d' ' > $ip/SQL/ipPOSTGRESQL
 		cat $ip/masscanoutput |grep "139/tcp" |cut -f6 -d' ' > $ip/NETBIOS/ipNETBIOS
 		cat $ip/masscanoutput |grep "443/tcp" |cut -f6 -d' ' > $ip/HTTPS/ipHTTPS
 		cat $ip/masscanoutput |grep "80/tcp" |cut -f6 -d' ' > $ip/HTTP/ipHTTP
@@ -136,6 +138,16 @@ if [ "$input" ]; then
 		cat $ip/masscanoutput |grep "3389/tcp" |cut -f6 -d' ' > $ip/RDP/ipRDP
 		cat $ip/masscanoutput |grep "5001/tcp" |cut -f6 -d' ' > $ip/JAVACONSOLE/ipJAVACONSOLE
 		cat $ip/masscanoutput |grep "5000/tcp" |cut -f6 -d' ' > $ip/DOCKERREGISTRY/ipDOCKER
+		cat $ip/masscanoutput |grep "5985/tcp" |cut -f6 -d' ' > $ip/WINRM/ipWINRM
+		cat $ip/masscanoutput |grep "5986/tcp" |cut -f6 -d' ' >> $ip/WINRM/ipWINRM
+		cat $ip/masscanoutput |grep "860/tcp" |cut -f6 -d' ' > $ip/ISCSI/ipISCSI
+		cat $ip/masscanoutput |grep "3260/tcp" |cut -f6 -d' ' >> $ip/ISCSI/ipISCSI
+		cat $ip/masscanoutput |grep "623/tcp" |cut -f6 -d' ' > $ip/IPMI/ipIPMI
+		cat $ip/masscanoutput |grep "5900/tcp" |cut -f6 -d' ' > $ip/VNC/ipVNC
+		cat $ip/masscanoutput |grep "6000/tcp" |cut -f6 -d' ' > $ip/X11/ipX11
+		cat $ip/masscanoutput |grep "5480/tcp" |cut -f6 -d' ' > $ip/VCENTER/ipVCENTER
+		cat $ip/masscanoutput |grep "902/tcp" |cut -f6 -d' ' > $ip/ESXI/ipESXI
+		cat $ip/masscanoutput |grep "903/tcp" |cut -f6 -d' ' >> $ip/ESXI/ipESXI
 	done
 fi
 organizeAllFolder
@@ -159,9 +171,9 @@ if [ "$input" ]; then
 	       echo -e "Scanning $range in progress"
 	       echo -e "${orange}####################################${neutre}"
 	       if [ "$rate" ]; then
-		      masscan -p 5000,5001,445,80,8080,8181,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 $range --rate=$rate |tee $ip/masscanoutput
+		      masscan -p 5000,5001,445,80,8080,8181,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389,5985,5986,860,3260,623,27016,5431,5900,6000,5480,902,903 $range --rate=$rate |tee $ip/masscanoutput
 	      else 
-		      masscan -p 5000,5001,445,80,8080,8181,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389 $range |tee $ip/masscanoutput
+		      masscan -p 5000,5001,445,80,8080,8181,88,389,53,143,993,110,995,25,465,17990,5900,1433,3306,1521,139,443,21,22,23,3389,5985,5986,860,3260,623,27016,5431,5900,6000,5480,902,903 $range |tee $ip/masscanoutput
 	       fi
        done
        exec 3<&-
@@ -177,7 +189,7 @@ echo -e "${rouge}#########################################################${neut
 echo -e "${orange}# @SyzikSecu ${neutre}"
 echo -e "${orange}# Example: ./NoTimeToWaste.sh -i inputPathSubnetFile ${neutre}\n"
 		echo "OPTIONS:"
-		echo "-r	masscan rate" 
+		echo "-r	Masscan rate" 
 		echo "-i 	Subnet file"
 		echo "-h	Displays this help text"
 echo -e "${rouge}#########################################################${neutre}"
